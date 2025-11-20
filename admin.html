@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hype Step – Admin</title>
+    <style>
+        :root{
+            --dark:#0f0c29;
+            --mid:#302b63;
+            --light:#24243e;
+            --primary:#ff2a6d;
+            --secondary:#ff7b54;
+            --neon:#ffd60a;
+            --glass:rgba(255,255,255,.08);
+            --font:'Poppins',sans-serif;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font)}
+        html{scroll-behavior:smooth}
+        body{
+            background:linear-gradient(-45deg,var(--dark),var(--mid),var(--light),var(--primary));
+            background-size:400% 400%;
+            animation:bgMove 12s ease infinite;
+            color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;
+        }
+        @keyframes bgMove{
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
+        /* particles */
+        .particles{position:fixed;width:100%;height:100%;top:0;left:0;z-index:0}
+        .particle{position:absolute;width:4px;height:4px;background:var(--neon);border-radius:50%;animation:float 18s infinite linear;opacity:0}
+        @keyframes float{0%{transform:translateY(100vh) scale(0);opacity:1}100%{transform:translateY(-10vh) scale(1.5);opacity:0}}
+        /* login card */
+        .login-box{position:relative;z-index:2;width:400px;padding:2.5rem 2rem;background:var(--glass);border-radius:20px;backdrop-filter:blur(12px);box-shadow:0 8px 32px rgba(0,0,0,.37);border:1px solid rgba(255,255,255,.1);animation:fadeIn 1s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+        h2{text-align:center;margin-bottom:1.5rem}
+        input[type=email],input[type=password],input[type=text],input[type=number],textarea{width:100%;padding:.9rem 1rem;margin-bottom:1.2rem;border:none;border-radius:12px;background:rgba(255,255,255,.1);color:#fff;transition:.3s}
+        input:focus,textarea:focus{background:rgba(255,255,255,.2);outline:none;box-shadow:0 0 15px var(--neon)}
+        textarea{resize:vertical;min-height:120px}
+        .btn{width:100%;padding:.9rem;border:none;border-radius:12px;background:linear-gradient(45deg,var(--primary),var(--secondary));color:#fff;font-size:1rem;font-weight:600;cursor:pointer;position:relative;overflow:hidden;transition:.4s}
+        .btn:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(255,42,109,.6)}
+        .btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);transition:left .6s}
+        .btn:hover::after{left:100%}
+        .logout{position:fixed;top:20px;right:20px;background:var(--glass);border:none;padding:.6rem 1.2rem;border-radius:20px;cursor:pointer;z-index:10;transition:.3s}
+        .logout:hover{background:rgba(255,255,255,.2)}
+        /* dashboard */
+        .dash-container{max-width:1000px;margin:auto;padding:2rem 1rem;position:relative;z-index:2;animation:fadeIn 1s ease}
+        table{width:100%;background:var(--glass);border-radius:16px;overflow:hidden;margin-top:1.5rem;backdrop-filter:blur(10px)}
+        th,td{padding:1rem;text-align:left}
+        thead{background:rgba(255,255,255,.08)}
+        tbody tr:hover{background:rgba(255,255,255,.05)}
+        .del{background:linear-gradient(45deg,#ff2a6d,#ff7b54);color:#fff;border:none;padding:.4rem .8rem;border-radius:6px;cursor:pointer;font-size:.8rem;transition:.3s}
+        .del:hover{transform:scale(.95)}
+        #preview{max-width:180px;max-height:180px;object-fit:cover;border-radius:12px;margin:.5rem 0;display:none;border:2px solid var(--neon)}
+        .upload-label{background:rgba(255,255,255,.1);padding:.7rem 1rem;border-radius:12px;cursor:pointer;display:inline-block;transition:.3s}
+        .upload-label:hover{background:rgba(255,255,255,.2);box-shadow:0 0 10px var(--neon)}
+        .hidden{display:none}
+    </style>
+</head>
+<body>
+<!-- particles -->
+<div class="particles" id="particles"></div>
+
+<!-- LOGIN -->
+<div id="login" class="login-box">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+        <input type="email" id="email" required placeholder="Email">
+        <input type="password" id="password" required placeholder="Password">
+        <button type="submit" class="btn">Login</button>
+        <p id="err" style="color:var(--neon);margin-top:.5rem"></p>
+    </form>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash" class="hidden dash-container">
+    <button class="logout" onclick="logout()">Logout</button>
+    <h2>Add / Edit Products</h2>
+    <form id="productForm">
+        <input type="text" id="name" required placeholder="Product name">
+        <input type="number" id="price" required placeholder="Price (Rs)">
+        <label for="fileInput" class="upload-label">📷 Upload Image (any ratio)</label>
+        <input type="file" id="fileInput" accept="image/*" hidden>
+        <img id="preview" alt="preview">
+        <textarea id="desc" required placeholder="Description"></textarea>
+        <button type="submit" class="btn">Save Product</button>
+    </form>
+
+    <h2 style="margin-top:3rem">Inventory</h2>
+    <table>
+        <thead><tr><th>Name</th><th>Price</th><th>Image</th><th></th></tr></thead>
+        <tbody id="table"></tbody>
+    </table>
+</div>
+
+<script>
+    const ADMIN_EMAIL = "noraizraza46@gmail.com";
+    const ADMIN_PASS  = "noraiz0001$";
+    const STORAGE_KEY = "hypeInventory";
+
+    let inventory = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    let currentBase64 = "";
+
+    /* particles */
+    function createParticles(){
+        const container = document.getElementById('particles');
+        for(let i=0;i<60;i++){
+            const p = document.createElement('div');
+            p.className='particle';
+            p.style.left = Math.random()*100 + '%';
+            p.style.animationDelay = Math.random()*20 + 's';
+            container.appendChild(p);
+        }
+    }
+    createParticles();
+
+    /* auth */
+    document.getElementById('loginForm').addEventListener('submit', e=>{
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const pass  = document.getElementById('password').value.trim();
+        if(email===ADMIN_EMAIL && pass===ADMIN_PASS){
+            localStorage.setItem('adminAuth','1');
+            showDash();
+        }else{
+            document.getElementById('err').textContent='Invalid credentials';
+        }
+    });
+    function logout(){localStorage.removeItem('adminAuth'); location.reload();}
+    function showDash(){
+        document.getElementById('login').style.display='none';
+        document.getElementById('dash').classList.remove('hidden');
+        loadProds();
+    }
+    (function(){if(localStorage.getItem('adminAuth')==='1') showDash();})();
+
+    /* image upload */
+    document.getElementById('fileInput').addEventListener('change', e=>{
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = ev=>{
+            currentBase64 = ev.target.result;
+            const preview = document.getElementById('preview');
+            preview.src = currentBase64;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    /* crud */
+    document.getElementById('productForm').addEventListener('submit', e=>{
+        e.preventDefault();
+        const item = {
+            id: Date.now(),
+            name: document.getElementById('name').value.trim(),
+            price: Number(document.getElementById('price').value),
+            desc: document.getElementById('desc').value.trim(),
+            img: currentBase64 || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='180'%3E%3Crect width='300' height='180' fill='%232a2a2a'/%3E%3Ctext x='50%25' y='50%25' font-size='60' fill='%23ccc' text-anchor='middle' dominant-baseline='middle'%3E👟%3C/text%3E%3C/svg%3E"
+        };
+        inventory.push(item);
+        saveAndRefresh();
+        e.target.reset();
+        currentBase64="";
+        document.getElementById('preview').style.display='none';
+        document.getElementById('fileInput').value="";
+    });
+    function del(id){
+        if(confirm('Delete this product?')){
+            inventory=inventory.filter(p=>p.id!==id);
+            saveAndRefresh();
+        }
+    }
+    function saveAndRefresh(){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(inventory));
+        loadProds();
+    }
+    function loadProds(){
+        const tbody=document.getElementById('table');
+        if(!inventory.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center">No products</td></tr>';return;}
+        tbody.innerHTML=inventory.map(p=>`
+            <tr>
+                <td>${p.name}</td>
+                <td>Rs ${p.price.toLocaleString()}</td>
+                <td><img src="${p.img}" style="width:60px;height:60px;object-fit:cover;border-radius:8px"></td>
+                <td><button class="del" onclick="del(${p.id})">Del</button></td>
+            </tr>`).join('');
+    }
+</script>
+</body>
+</html>

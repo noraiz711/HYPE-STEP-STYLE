@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hype Step | Step Into Hype</title>
+
+    <!-- Font-Awesome (icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --bg:linear-gradient(135deg, #ffe4e6, #ffd6ff, #e7c6ff);
+            --card:rgba(255, 255, 255, .70);
+            --primary:#ff006e;
+            --secondary:#8338ec;
+            --accent:#06ffa5;
+            --text:#2b2d42;
+            --font:'Poppins', sans-serif;
+            --shadow:0 8px 32px rgba(0,0,0,.1);
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font)}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);min-height:100vh}
+
+        /* --- NAV --- */
+        header{background:rgba(255,255,255,.3);backdrop-filter:blur(10px);position:sticky;top:0;z-index:999;border-bottom:1px solid rgba(255,255,255,.5)}
+        .container{max-width:1100px;margin:auto;padding:0 1rem}
+        nav{display:flex;justify-content:space-between;align-items:center;padding:1rem 0}
+        .logo{font-size:1.9rem;font-weight:700;background:linear-gradient(45deg, var(--primary), var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{list-style:none;display:flex;gap:1.5rem}
+        .nav-links a:hover{color:var(--primary)}
+
+        /* --- HERO --- */
+        .hero{height:60vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+        .hero h1{font-size:3.5rem;margin-bottom:1rem;letter-spacing:-1px}
+        .hero p{font-size:1.2rem;margin-bottom:2rem}
+        .btn{background:linear-gradient(45deg, var(--primary), var(--secondary));color:#fff;padding:.85rem 2.5rem;border-radius:30px;font-weight:600;transition:.3s;box-shadow:0 4px 15px rgba(255,0,110,.3);display:inline-block}
+        .btn:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(255,0,110,.45)}
+
+        /* --- SHOP --- */
+        .section-title{text-align:center;font-size:2.4rem;margin:3rem 0 2rem}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem}
+        .card{background:var(--card);border-radius:20px;overflow:hidden;backdrop-filter:blur(10px);box-shadow:var(--shadow);transition:.3s}
+        .card:hover{transform:translateY(-8px) scale(1.02)}
+        .card img{width:100%;height:180px;object-fit:cover;background:rgba(255,255,255,.5)}
+        .detail{padding:1.5rem}
+        .name{font-weight:600;font-size:1.1rem}
+        .price{font-size:1.4rem;color:var(--primary);margin:.5rem 0}
+        .desc{font-size:.9rem;opacity:.8}
+        .buy{background:linear-gradient(45deg, var(--accent), #06d6a0);color:#fff;padding:.7rem 0;width:100%;text-align:center;border-radius:25px;margin-top:1rem;display:block;font-weight:600;transition:.3s}
+        .buy:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(6,255,165,.4)}
+
+        /* --- CONTACT --- */
+        #contact{background:rgba(255,255,255,.4);padding:4rem 0;margin-top:3rem;border-radius:40px 40px 0 0}
+        .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
+        .map iframe{width:100%;height:300px;border-radius:16px;border:0}
+        .info a{margin:.5rem 0;display:flex;align-items:center;gap:.7rem;font-size:1.1rem;transition:.3s}
+        .info a:hover{color:var(--primary)}
+        .social{margin-top:1.2rem;display:flex;gap:1rem;font-size:1.6rem}
+        .social i:hover{transform:scale(1.2);color:var(--secondary)}
+
+        /* --- FLOATING WHATSAPP --- */
+        .wa-float{position:fixed;bottom:25px;right:25px;width:60px;height:60px;background:#25d366;color:#fff;border-radius:50%;display:grid;place-items:center;font-size:28px;box-shadow:0 4px 20px rgba(37,211,102,.5);transition:.3s;z-index:1000}
+        .wa-float:hover{transform:scale(1.1)}
+
+        /* --- FOOTER --- */
+        footer{text-align:center;padding:2rem 0;font-size:.9rem;opacity:.7}
+    </style>
+</head>
+<body>
+<header>
+    <div class="container nav">
+        <a class="logo" href="#">Hype Step</a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#shop">Shop</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+</header>
+
+<section id="home" class="hero">
+    <div>
+        <h1>Step Into Hype</h1>
+        <p>Premium joggers & sneakers – cash on delivery, Pakistan-wide.</p>
+        <a href="#shop" class="btn">Explore Collection</a>
+    </div>
+</section>
+
+<section id="shop" class="container">
+    <h2 class="section-title">Heat Drops</h2>
+    <div class="grid" id="productGrid"><div class="loader"></div></div>
+</section>
+
+<section id="contact" class="container">
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-grid">
+        <div class="map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3401.74687039674!2d74.27143931511377!3d31.467813981380834!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3919065f5d15e0e5%3A0x1f7a7b6e5eb8c3b3!2sLahore%2C%20Pakistan!5e0!3m2!1sen!2s!4v1670000000000" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        <div class="info">
+            <a href="tel:+923267434983"><i class="fa-solid fa-phone"></i> +92 326 7434983</a>
+            <a href="mailto:hypestep@email.com"><i class="fa-solid fa-envelope"></i> hypestep@email.com</a>
+            <a href="https://wa.me/923267434983" target="_blank"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+            <div class="social">
+                <a href="https://www.instagram.com/hypestep" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/hypestep" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://twitter.com/hypestep" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; Hype Step 2025 | All rights reserved</p>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a class="wa-float" href="https://wa.me/923267434983" target="_blank" title="Chat with us on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<script>
+    const WHATSAPP = "923267434983";
+    const defaultProducts = [
+        {id:1,name:"Nike Air Max 90",price:9499,desc:"Classic silhouette, unbeatable comfort.",img:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='180'%3E%3Crect width='300' height='180' fill='%23ffe4e6'/%3E%3Ctext x='50%25' y='50%25' font-size='60' fill='%23ff006e' text-anchor='middle' dominant-baseline='middle'%3E👟%3C/text%3E%3C/svg%3E"},
+        {id:2,name:"Adidas Ultraboost 22",price:12999,desc:"Energy return with every stride.",img:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='180'%3E%3Crect width='300' height='180' fill='%23ffd6ff'/%3E%3Ctext x='50%25' y='50%25' font-size='60' fill='%238338ec' text-anchor='middle' dominant-baseline='middle'%3E👟%3C/text%3E%3C/svg%3E"},
+        {id:3,name:"Puma RS-X",price:7999,desc:"Bold retro style, cushioned midsole.",img:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='180'%3E%3Crect width='300' height='180' fill='%23e7c6ff'/%3E%3Ctext x='50%25' y='50%25' font-size='60' fill='%2306ffa5' text-anchor='middle' dominant-baseline='middle'%3E👟%3C/text%3E%3C/svg%3E"}
+    ];
+    function loadProducts(){
+        const stored = JSON.parse(localStorage.getItem("hypeInventory") || "[]");
+        const list = stored.length ? stored : defaultProducts;
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = list.map(p=>`
+            <div class="card">
+                <img src="${p.img}" alt="${p.name}">
+                <div class="detail">
+                    <div class="name">${p.name}</div>
+                    <div class="price">Rs ${p.price.toLocaleString()}</div>
+                    <div class="desc">${p.desc}</div>
+                    <a class="buy" href="https://wa.me/${WHATSAPP}?text=Hi, I want to buy *${p.name}* (Rs ${p.price}). Please share JazzCash details and real pics." target="_blank">Buy via JazzCash</a>
+                </div>
+            </div>
+        `).join('');
+    }
+    loadProducts();
+</script>
+</body>
+</html>
